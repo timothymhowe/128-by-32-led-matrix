@@ -4,18 +4,8 @@ from time import strftime
 from PIL import Image, ImageEnhance
 from rgbmatrix import RGBMatrixOptions, RGBMatrix, graphics
 
-class ClockNumber:
-    def __init__():
-        print("Sup Fam bruh")
-
-
-
-
-
-
-
+# options for the RGB matrix controlled by the adafruit hat with RTC and PWM.  TODO: need to create a generic object for this 
 options = RGBMatrixOptions()
-
 options.rows = 32
 options.cols = 64
 options.chain_length = 2
@@ -87,6 +77,8 @@ def create_full_clock_image(H,M,S):
     foo = concat_images_horizontally(foo,M)
     foo = concat_images_horizontally(foo,big_spacer)
     foo = concat_images_horizontally(foo,S)
+
+    # adding spacers to roughly center the image
     foo = concat_images_horizontally(img_spacer,foo)
     foo = concat_images_horizontally(img_spacer,foo)
     foo = concat_images_horizontally(foo,img_spacer)
@@ -106,6 +98,9 @@ try:
     while True:
         last_time = curr_time
         curr_time = get_timestamp_from_rtc()
+
+        #  recreating the full clock image every update isn't the most efficient way of doing this, obviously.  Works for now, and rendering the image eery second shouldn't
+        # be too taxing on the RPI given that the image is only 32x128.   
         if (last_time != curr_time):
             ss=create_tube_pair_image(curr_time[4],curr_time[5])
             if curr_time[3] != last_time[3]:
